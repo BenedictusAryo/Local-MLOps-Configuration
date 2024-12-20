@@ -1,0 +1,16 @@
+[project]
+name = "local-mlops-configuration"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "scikit-learn>=1.6.0",
+    "ucimlrepo>=0.0.7",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+    "jupyter>=1.1.1",
+]
