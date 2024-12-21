@@ -169,3 +169,17 @@ cython_debug/
 
 # PyPI configuration file
 .pypirc
+
+# Data
+*.csv
+
+# Model
+*.pkl
+*.onnx
+
+# Mac OS
+.DS_Store
+
+# VS Code
+.vscode/
+
