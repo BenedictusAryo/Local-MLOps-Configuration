@@ -9,20 +9,8 @@ import pickle
 from imblearn.over_sampling import ADASYN
 from src.logging.console_log import setup_logging
 from typing import Tuple, Union
+from settings import settings
 
-PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent
-DATA_FOLDER = PROJECT_ROOT / "data/train_test"
-PROCESSED_DATA_FOLDER = PROJECT_ROOT / "data/processed"
-TARGET_COLUMN_NAME = "Region"
-NUMERICAL_FEATURE_COLUMN_NAMES = [
-    "Fresh",
-    "Milk",
-    "Grocery",
-    "Frozen",
-    "Detergents_Paper",
-    "Delicassen",
-]
-SAVED_MODEL_FOLDER = PROJECT_ROOT / "saved_model"
 
 # setup logging
 logger = setup_logging()
@@ -44,7 +32,9 @@ def oversample_data(
     """
     oversampler = ADASYN(random_state=random_state)
     X_resampled, y_resampled = oversampler.fit_resample(X, y)
-    logger.info(f"After oversampling: {y_resampled[TARGET_COLUMN_NAME].value_counts()}")
+    logger.info(
+        f"After oversampling: {y_resampled[settings.TARGET_COLUMN_NAME].value_counts()}"
+    )
     return X_resampled, y_resampled
 
 
@@ -108,32 +98,42 @@ def main():
     """Run preprocessing steps"""
     # Load the data
     logger.info("Loading data")
-    X_train = pd.read_csv(DATA_FOLDER / "X_train.csv")
-    y_train = pd.read_csv(DATA_FOLDER / "y_train.csv")
+    X_train = pd.read_csv(settings.TRAIN_TEST_FOLDER / "X_train.csv")
+    y_train = pd.read_csv(settings.TRAIN_TEST_FOLDER / "y_train.csv")
 
     # Print data shape of label to check for class imbalance
-    label_counts = y_train[TARGET_COLUMN_NAME].value_counts()
+    label_counts = y_train[settings.TARGET_COLUMN_NAME].value_counts()
     logger.info(f"Label counts: {label_counts}")
 
     # Oversample the data
-    X_train_resampled, y_train_resampled = oversample_data(X_train, y_train)
+    X_train_resampled, y_train_resampled = oversample_data(
+        X_train, y_train, random_state=settings.RANDOM_STATE
+    )
 
     # Fit and save the scaler
     scaler = preprocess_fit(
         X_train_resampled,
-        NUMERICAL_FEATURE_COLUMN_NAMES,
-        SAVED_MODEL_FOLDER / "preprocessor/scaler.pkl",
+        settings.NUMERICAL_FEATURE_COLUMNS,
+        settings.SCALER_PATH,
     )
 
     # Transform the data
     X_train_scaled = preprocess_transform(
-        X_train_resampled, scaler, NUMERICAL_FEATURE_COLUMN_NAMES
+        X_train_resampled,
+        scaler,
+        settings.NUMERICAL_FEATURE_COLUMNS,
+        settings.CATEGORICAL_COLUMNS,
     )
 
+    # Create processed folder if it doesn't exist
+    settings.PROCESSED_DATA_FOLDER.mkdir(parents=True, exist_ok=True)
+
     # Save the processed data
-    X_train_scaled.to_csv(PROCESSED_DATA_FOLDER / "X_train_processed.csv", index=False)
+    X_train_scaled.to_csv(
+        settings.PROCESSED_DATA_FOLDER / "X_train_processed.csv", index=False
+    )
     y_train_resampled.to_csv(
-        PROCESSED_DATA_FOLDER / "y_train_processed.csv", index=False
+        settings.PROCESSED_DATA_FOLDER / "y_train_processed.csv", index=False
     )
     logger.info("Processed data saved successfully")
 

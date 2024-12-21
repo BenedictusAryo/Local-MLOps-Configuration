@@ -1,0 +1,11 @@
+# Data Configuration
+TARGET_COLUMN_NAME=Region
+NUMERICAL_FEATURE_COLUMNS=["Fresh","Milk","Grocery","Frozen","Detergents_Paper","Delicassen"]
+CATEGORICAL_COLUMNS=["Channel"]
+
+# Model Configuration
+RANDOM_STATE=42
+TEST_SIZE=0.2
+
+# API Configuration
+API_PORT=8000
