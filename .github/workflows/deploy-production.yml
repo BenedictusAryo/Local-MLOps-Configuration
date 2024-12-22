@@ -20,7 +20,9 @@ jobs:
           python-version-file: ".python-version"
 
       - name: Install dependencies
-        run: uv pip install -r pyproject.toml --all-extras
+        run: |
+          uv venv
+          uv pip install -r pyproject.toml --all-extras
 
       - name: Run Full Pipeline
         run: |
