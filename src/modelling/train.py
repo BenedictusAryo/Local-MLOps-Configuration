@@ -16,6 +16,22 @@ from settings import settings
 logger = setup_logging()
 
 
+def train_model(X_train: pd.DataFrame, y_train: pd.DataFrame) -> LogisticRegression:
+    """Train the model using Logistic Regression
+
+    Args:
+        X_train (pd.DataFrame): Training features
+        y_train (pd.DataFrame): Training target
+
+    Returns:
+        LogisticRegression: Trained model
+    """    
+    model = LogisticRegression(random_state=settings.RANDOM_STATE)
+    logger.info(f"Training the model using {model}")
+    model.fit(X_train, y_train[settings.TARGET_COLUMN_NAME])
+    return model
+
+
 def main():
     """Run Model Training"""
 
@@ -25,9 +41,7 @@ def main():
     y_train = pd.read_csv(settings.PROCESSED_DATA_FOLDER / "y_train_processed.csv")
 
     # Train the model
-    model = LogisticRegression(random_state=settings.RANDOM_STATE)
-    logger.info(f"Training the model using {model}")
-    model.fit(X_train, y_train[settings.TARGET_COLUMN_NAME])
+    model = train_model(X_train, y_train)
 
     # Create model directory if it doesn't exist
     settings.MODEL_PATH.parent.mkdir(parents=True, exist_ok=True)
