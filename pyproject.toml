@@ -5,11 +5,11 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "ucimlrepo>=0.0.7",
     "litserve>=0.2.5",
     "loguru>=0.7.3",
     "pydantic-settings>=2.7.0",
     "scikit-learn>=1.6.0",
-    "ucimlrepo>=0.0.7",
 ]
 
 [dependency-groups]
