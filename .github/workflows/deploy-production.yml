@@ -39,8 +39,7 @@ jobs:
           echo "This is a report on the model training pipeline" >> report.md
           echo "```" >> report.md
           cat saved_models/metrics/overall_metrics.json >> report.md
-          echo "```" >> report.md
-          cat saved_models/metrics/classification_report.txt >> report.md
+          echo "```" >> report.md          
           echo '![](saved_model/metrics/confussion_matrix.png "Confusion Matrix")' >> report.md
           cml comment create report.md
 
