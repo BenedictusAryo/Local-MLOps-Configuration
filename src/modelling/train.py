@@ -1,12 +1,8 @@
 """
-Train the model
-This script trains the model using the preprocessed data. The model is trained using a Random Forest Classifier.
-The script saves the trained model in the saved_model folder.
-Developer will likely change this script to use a different model or hyperparameters.
-Then, the changes is monitored in the github repository via the CI/CD pipeline.
+Train the model using Random Forest Classifier
 """
 
-from sklearn.linear_model import LogisticRegression
+from sklearn.ensemble import RandomForestClassifier
 from src.logging.console_log import setup_logging
 import pandas as pd
 import pickle
@@ -16,17 +12,21 @@ from settings import settings
 logger = setup_logging()
 
 
-def train_model(X_train: pd.DataFrame, y_train: pd.DataFrame) -> LogisticRegression:
-    """Train the model using Logistic Regression
+def train_model(X_train: pd.DataFrame, y_train: pd.DataFrame) -> RandomForestClassifier:
+    """Train the model using Random Forest
 
     Args:
         X_train (pd.DataFrame): Training features
         y_train (pd.DataFrame): Training target
 
     Returns:
-        LogisticRegression: Trained model
+        RandomForestClassifier: Trained model
     """    
-    model = LogisticRegression(random_state=settings.RANDOM_STATE)
+    model = RandomForestClassifier(
+        n_estimators=100,
+        max_depth=10,
+        random_state=settings.RANDOM_STATE
+    )
     logger.info(f"Training the model using {model}")
     model.fit(X_train, y_train[settings.TARGET_COLUMN_NAME])
     return model
