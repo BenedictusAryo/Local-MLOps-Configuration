@@ -37,19 +37,28 @@ jobs:
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "## Model Training Report" > report.md
-          echo "This is a report on the model training pipeline" >> report.md
-          echo "<br>" >> report.md
-          echo "```json" >> report.md
-          cat saved_model/metrics/overall_metrics.json >> report.md
-          echo "```" >> report.md
-          echo "<br>" >> report.md
-          echo '![](saved_model/metrics/confusion_matrix.png "Confusion Matrix")' >> report.md
-          echo "<br>" >> report.md
-          echo "```" >> report.md
-          cat saved_model/metrics/classification_report.txt >> report.md
-          echo "```" >> report.md
-          cml comment create report.md
+          # Create report header
+        echo "## Model Training Report" > report.md
+        echo "This is a report on the model training pipeline" >> report.md
+        echo "<br>" >> report.md
+        
+        # Add metrics JSON
+        echo "```json" >> report.md
+        cat saved_model/metrics/overall_metrics.json >> report.md
+        echo "```" >> report.md
+        echo "<br>" >> report.md
+        
+        # Add confusion matrix
+        echo '![](saved_model/metrics/confusion_matrix.png "Confusion Matrix")' >> report.md
+        echo "<br>" >> report.md
+        
+        # Add classification report
+        echo "```" >> report.md
+        cat saved_model/metrics/classification_report.txt >> report.md
+        echo "```" >> report.md
+        
+        # Create CML report
+        cml comment create report.md
 
       - name: Login to Docker Hub
         uses: docker/login-action@v3
