@@ -24,7 +24,8 @@ def train_model(X_train: pd.DataFrame, y_train: pd.DataFrame) -> SVC:
     """    
     model = SVC(
         kernel='rbf',
-        random_state=settings.RANDOM_STATE
+        random_state=settings.RANDOM_STATE,
+        C=1000,
     )
     logger.info(f"Training the model using {model}")
     model.fit(X_train, y_train[settings.TARGET_COLUMN_NAME])
