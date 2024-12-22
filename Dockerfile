@@ -10,4 +10,4 @@ RUN uv pip install -r pyproject.toml --all-extras
 
 RUN uv pip install uvloop
 EXPOSE 8000
-CMD ["python", "/app/.\src\api\api_model.py"]
+CMD ["uv", "run", "main.py"]

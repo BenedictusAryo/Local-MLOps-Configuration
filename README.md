@@ -63,6 +63,13 @@ uv run main.py
 ```
 This command starts a service using LitServe, creating an API endpoint for model inference.
 
+To hit the model serving, we can use `client.py` as an example
+```bash
+uv run client.py
+```
+![](assets/5_hit_api.gif)
+
+
 ## Container Deployment
 
 ### Building the Container
@@ -81,6 +88,21 @@ docker tag mlops-simple-app:latest <your-dockerhub-username>/mlops-simple-app:la
 # Push the image
 docker push <your-dockerhub-username>/mlops-simple-app:latest
 ```
+
+### Deploy Using Docker
+To deploy the application using Docker, follow these steps:
+
+1. Pull the Docker image from Docker Hub:
+```bash
+docker pull <your-dockerhub-username>/mlops-simple-app:latest
+```
+
+2. Run the Docker container:
+```bash
+docker run -d --name mlops-app -p 8000:8000 <your-dockerhub-username>/mlops-simple-app:latest
+```
+
+This will start the application and expose it on port 8000.
 
 ### Deploy to Local Kubernetes (Docker Desktop)
 ```bash
@@ -111,3 +133,32 @@ kubectl get services -n mlops-staging
 Note: Make sure Docker Desktop is running and Kubernetes is enabled before running these commands.
 
 Note: Replace `<your-dockerhub-username>` with your actual Docker Hub username.
+
+# CI/CD using Github Action
+
+## GitHub Actions Workflows
+This project includes two GitHub Actions workflows for CI/CD:
+
+1. **Model Training and Evaluation** (`.github/workflows/model-training.yml`):
+   - Trigger: Runs on push events to branches matching the pattern `dev/*`.
+   - Steps:
+     - Set up the environment (CML, Python, and `uv`).
+     - Install dependencies.
+     - Run the data collection, preprocessing, model training, and testing pipeline.
+     - Generate a report on the model training pipeline and post it as a comment on the pull request.
+
+2. **Deploy to Production** (`.github/workflows/deploy-production.yml`):
+   - Trigger: Runs on push events to the `main` branch.
+   - Steps:
+     - Set up the environment (CML, Python, and `uv`).
+     - Install dependencies.
+     - Run the full pipeline (data collection, preprocessing, model training, and testing).
+     - Generate a report on the model training pipeline and post it as a comment on the pull request.
+     - Build and push the Docker image to Docker Hub.
+     - Note: The deployment to Kubernetes is done manually since the cluster is local.
+
+## Limitation
+### Manual Deployment
+Currently, the Docker and Kubernetes deployment is done manually since the cluster is local. Follow the steps above to deploy the application manually to your local Docker or Kubernetes cluster.
+
+Even though the deployment is manual, the CI/CD pipeline automates the process up to building and pushing the Docker image to Docker Hub. This ensures that the latest version of the application is always available as a Docker image, ready to be deployed.
