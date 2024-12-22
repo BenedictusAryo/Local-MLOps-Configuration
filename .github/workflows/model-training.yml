@@ -1,0 +1,47 @@
+name: Model Training and Evaluation
+
+on:
+  push:
+    branches:
+      - 'dev/*'
+
+jobs:
+  train-and-report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: ".python-version"
+
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      - name: Run Training Pipeline
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python -m src.data.collect_data
+          python -m src.data.preprocess_data
+          python -m src.modelling.train
+          python -m src.modelling.test
+
+      - name: Create CML Report
+        env:
+          REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "## Model Training Report" > report.md
+          echo "This is a report on the model training pipeline" >> report.md
+          echo "```" >> report.md
+          cat saved_models/metrics/overall_metrics.json >> report.md
+          echo "```" >> report.md
+          cat saved_models/metrics/classification_report.txt >> report.md
+          echo '![](saved_model/metrics/confussion_matrix.png "Confusion Matrix")' >> report.md
+          cml comment create report.md
