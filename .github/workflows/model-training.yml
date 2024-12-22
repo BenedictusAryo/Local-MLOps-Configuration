@@ -28,10 +28,10 @@ jobs:
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          python -m src.data.collect_data
-          python -m src.data.preprocess_data
-          python -m src.modelling.train
-          python -m src.modelling.test
+          uv run python -m src.data.collect_data
+          uv run python -m src.data.preprocess_data
+          uv run python -m src.modelling.train
+          uv run python -m src.modelling.test
 
       - name: Create CML Report
         env:

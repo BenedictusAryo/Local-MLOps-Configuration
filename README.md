@@ -30,25 +30,25 @@ uv pip install -r pyproject.toml --all-extras
 
 1. Data Collection
 ```bash
-python -m src.data.collect_data
+uv run python -m src.data.collect_data
 ```
 This step collects and prepares the raw data for processing.
 
 2. Data Preprocessing
 ```bash
-python -m src.data.preprocess_data
+uv run python -m src.data.preprocess_data
 ```
 This step cleans and transforms the raw data into features suitable for model training.
 
 3. Model Training
 ```bash
-python -m src.modelling.train
+uv run python -m src.modelling.train
 ```
 Trains the machine learning model using the preprocessed data.
 
 4. Model Testing
 ```bash
-python -m src.modelling.test
+uv run python -m src.modelling.test
 ```
 Evaluates the trained model's performance on test data.
 
