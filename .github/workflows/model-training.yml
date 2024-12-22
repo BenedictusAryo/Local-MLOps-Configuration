@@ -20,7 +20,7 @@ jobs:
           python-version-file: ".python-version"
 
       - name: Install dependencies
-        run: uv sync --frozen
+        run: uv pip install -r pyproject.toml --all-extras
 
       - name: Run Training Pipeline
         env:

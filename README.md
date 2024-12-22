@@ -22,7 +22,7 @@ powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | ie
 
 ### Install Dependencies
 ```bash
-uv sync --frozen
+uv pip install -r pyproject.toml --all-extras
 ```
 
 ## Running the Pipeline

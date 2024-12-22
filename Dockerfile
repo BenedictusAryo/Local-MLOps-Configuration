@@ -5,7 +5,7 @@ COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
 WORKDIR /app
 COPY . /app
 # Install litserve and requirements
-RUN uv sync --frozen
+RUN uv pip install -r pyproject.toml --all-extras
 
 RUN uv pip install uvloop
 EXPOSE 8000
