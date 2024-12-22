@@ -33,24 +33,28 @@ uv pip install -r pyproject.toml --all-extras
 uv run python -m src.data.collect_data
 ```
 This step collects and prepares the raw data for processing.
+![](assets/1_collect_data.gif)
 
 2. Data Preprocessing
 ```bash
 uv run python -m src.data.preprocess_data
 ```
 This step cleans and transforms the raw data into features suitable for model training.
+![](assets/2_preprocess_data.gif)
 
 3. Model Training
 ```bash
 uv run python -m src.modelling.train
 ```
 Trains the machine learning model using the preprocessed data.
+![](assets/3_train.gif)
 
 4. Model Testing
 ```bash
 uv run python -m src.modelling.test
 ```
 Evaluates the trained model's performance on test data.
+![](assets/4_test.gif)
 
 ## Serving the Model
 To serve the model as an API service:
