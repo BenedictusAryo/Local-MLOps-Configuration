@@ -24,12 +24,16 @@ class ModelAPIServing(ls.LitAPI):
         """Setup the model for serving"""
         # Load the model
         logger.info(f"Loading model from {settings.MODEL_PATH}")
+        if not settings.MODEL_PATH.exists():
+            raise FileNotFoundError(f"Model not found at {settings.MODEL_PATH}")
         with open(settings.MODEL_PATH, "rb") as file:
             self.model = pickle.load(file)
         logger.info(f"Model loaded successfully from {settings.MODEL_PATH}")
 
         # Load the scaler
         logger.info(f"Loading scaler from {settings.SCALER_PATH}")
+        if not settings.SCALER_PATH.exists():
+            raise FileNotFoundError(f"Scaler not found at {settings.SCALER_PATH}")
         with open(settings.SCALER_PATH, "rb") as file:
             self.scaler = pickle.load(file)
         logger.info(f"Scaler loaded successfully from {settings.SCALER_PATH}")
@@ -61,14 +65,3 @@ class ModelAPIServing(ls.LitAPI):
             prediction=self.class_labels[np.argmax(response, axis=1)].tolist()[0],
             probability=np.max(response).tolist(),
         )
-
-
-if __name__ == "__main__":
-    # Serve the model
-    api = ModelAPIServing()
-    server = ls.LitServer(
-        api,
-        api_path="/predict",
-    )
-
-    server.run(port=settings.API_PORT)

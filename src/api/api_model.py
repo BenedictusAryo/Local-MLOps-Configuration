@@ -16,5 +16,5 @@ class PredictionRequest(BaseModel):
 
 
 class PredictionResponse(BaseModel):
-    prediction: str
+    prediction: int
     probability: float

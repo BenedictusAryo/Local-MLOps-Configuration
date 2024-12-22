@@ -1,6 +1,19 @@
-def main():
-    print("Hello from local-mlops-configuration!")
+"""
+Model Serving API using LiteServe
+"""
+
+from src.api.api_serving import ModelAPIServing
+from settings import settings
+import litserve as ls
 
 
 if __name__ == "__main__":
-    main()
+    # Serve the model
+    api = ModelAPIServing()
+    server = ls.LitServer(
+        api,
+        api_path="/predict",
+        track_requests=True,
+    )
+
+    server.run(port=settings.API_PORT)
