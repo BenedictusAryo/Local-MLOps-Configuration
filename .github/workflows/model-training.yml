@@ -41,7 +41,14 @@ jobs:
         run: |
           echo "## Model Training Report" > report.md
           echo "This is a report on the model training pipeline" >> report.md
+          echo "<br>" >> report.md
+          echo "```json" >> report.md
           cat saved_model/metrics/overall_metrics.json >> report.md
+          echo "```" >> report.md
+          echo "<br>" >> report.md
           echo '![](saved_model/metrics/confusion_matrix.png "Confusion Matrix")' >> report.md
+          echo "<br>" >> report.md
+          echo "```" >> report.md
           cat saved_model/metrics/classification_report.txt >> report.md
+          echo "```" >> report.md
           cml comment create report.md

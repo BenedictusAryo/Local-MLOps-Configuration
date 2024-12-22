@@ -101,6 +101,7 @@ docker pull <your-dockerhub-username>/mlops-simple-app:latest
 ```bash
 docker run -d --name mlops-app -p 8000:8000 <your-dockerhub-username>/mlops-simple-app:latest
 ```
+![](assets/6_deployed_docker_image.jpg)
 
 This will start the application and expose it on port 8000.
 
