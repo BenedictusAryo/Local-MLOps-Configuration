@@ -36,8 +36,6 @@ jobs:
           uv run python -m src.modelling.test
 
       - name: Create CML Report
-        needs: pipeline
-        if: always()
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -47,7 +45,7 @@ jobs:
           echo "\`\`\`" >> report.md
           pwd >> report.md
           echo "\`\`\`" >> report.md
-          
+
           echo "## Model Training Report" > report.md
           echo "This is a report on the model training pipeline" >> report.md
           echo "<br>" >> report.md
