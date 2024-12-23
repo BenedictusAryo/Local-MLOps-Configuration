@@ -51,6 +51,7 @@ jobs:
           echo "\`\`\`json" >> report.md
           cat saved_model/metrics/overall_metrics.json >> report.md
           echo "\`\`\`" >> report.md
+          echo "" >> report.md
           
           # Add classification report
           echo "\`\`\`" >> report.md
