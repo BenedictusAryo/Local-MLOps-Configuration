@@ -4,6 +4,53 @@ MLOps Configuration for Simple Simulation
 ## Project Overview
 This project demonstrates a simple MLOps configuration for a machine learning simulation. It includes data collection, preprocessing, model training, testing, and serving capabilities.
 
+## Workflow Overview
+```mermaid
+graph TD
+    %% Custom styles with improved contrast
+    classDef trigger fill:#98FB98,stroke:#228B22,stroke-width:2px,color:#000000
+    classDef process fill:#F0F8FF,stroke:#2B4F81,stroke-width:2px,color:#000000
+    classDef decision fill:#FFE4E1,stroke:#8B0000,stroke-width:2px,color:#000000
+    classDef storage fill:#E6E6FA,stroke:#191970,stroke-width:2px,color:#000000
+    classDef endpoint fill:#B0E0E6,stroke:#00008B,stroke-width:2px,color:#000000
+
+    subgraph Development["🔧 Development Pipeline"]
+        A[["📤 Developer Push"]]:::trigger -->|dev/* branch| B["⚙️ Model Training Workflow"]:::process
+        B -->|Run Pipeline| C["🧪 Train & Test"]:::process
+        C -->|Generate| D["📊 CML Report"]:::process
+        D -->|Review| P{"📋 Metrics Satisfactory?"}:::decision
+        P -->|No| Q["📝 Continue Development"]:::process
+        P -->|Yes| R["🔀 Create Pull Request"]:::process
+    end
+
+    subgraph Production["🚀 Production Pipeline"]
+        E[["📤 Main Branch Push"]]:::trigger -->|trigger| F["⚙️ Deploy Production Workflow"]:::process
+        F -->|Run Pipeline| G["🧪 Train & Test"]:::process
+        G -->|Build| H["📦 Docker Image"]:::storage
+        H -->|Push| I["🗄️ Docker Hub"]:::storage
+        I -->|Pull| J["☸️ Local Kubernetes"]:::endpoint
+    end
+
+    subgraph Monitoring["📈 Monitoring Pipeline"]
+        K[["⏰ Weekly Schedule"]]:::trigger -->|trigger| L["🔍 Data Drift Monitor"]:::process
+        L -->|Check| M{"❓ Drift Detected?"}:::decision
+        M -->|Yes| N["🔄 Retrain Model"]:::process
+        N --> H
+        M -->|No| O["✅ No Action"]:::process
+    end
+
+    %% Connection between Development and Production
+    R -->|Merge| E
+
+    %% Links styling
+    linkStyle default stroke:#333,stroke-width:2px,fill:none
+    
+    %% Subgraph styling with improved contrast
+    style Development fill:#f5f5f5,stroke:#333,stroke-width:2px,color:#000000
+    style Production fill:#f5f5f5,stroke:#333,stroke-width:2px,color:#000000
+    style Monitoring fill:#f5f5f5,stroke:#333,stroke-width:2px,color:#000000
+```
+
 ## Sample Data
 The project uses [Wholesale Customer Dataset](https://archive.ics.uci.edu/dataset/292/wholesale+customers) for training and testing the model.
 
@@ -19,6 +66,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 # On Windows.
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
+
 
 ### Install Dependencies
 ```bash
