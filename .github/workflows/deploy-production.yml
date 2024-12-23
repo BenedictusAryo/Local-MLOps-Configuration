@@ -9,8 +9,7 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-node@v2
-      - uses: iterative/setup-cml@v1
+      - uses: iterative/setup-cml@v2
       - uses: actions/checkout@v4
       
       - name: Install uv
@@ -40,7 +39,6 @@ jobs:
           # Create report header
           echo "## Model Training Report" > report.md
           echo "This is a report on the model training pipeline" >> report.md
-          
           # Add confusion matrix
           echo '![](saved_model/metrics/confusion_matrix.png "Confusion Matrix")' >> report.md
           echo "" >> report.md

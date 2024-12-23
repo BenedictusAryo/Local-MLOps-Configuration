@@ -9,8 +9,7 @@ jobs:
   train-and-report:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/setup-node@v2
-      - uses: iterative/setup-cml@v1
+      - uses: iterative/setup-cml@v2
       - uses: actions/checkout@v4
       
       - name: Install uv
@@ -27,6 +26,7 @@ jobs:
           uv pip install -r pyproject.toml --all-extras
 
       - name: Run Training Pipeline
+        id: pipeline
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -39,16 +39,25 @@ jobs:
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          # Create report header
           echo "## Model Training Report" > report.md
           echo "This is a report on the model training pipeline" >> report.md
-          echo "<br>" >> report.md
-          echo "```json" >> report.md
-          cat saved_model/metrics/overall_metrics.json >> report.md
-          echo "```" >> report.md
-          echo "<br>" >> report.md
+          
+          # Add confusion matrix
           echo '![](saved_model/metrics/confusion_matrix.png "Confusion Matrix")' >> report.md
-          echo "<br>" >> report.md
-          echo "```" >> report.md
+          echo "" >> report.md
+          
+          # Add metrics JSON
+          echo "\`\`\`json" >> report.md
+          cat saved_model/metrics/overall_metrics.json >> report.md
+          echo "" >> report.md
+          echo "\`\`\`" >> report.md
+          echo "" >> report.md
+          
+          # Add classification report
+          echo "\`\`\`" >> report.md
           cat saved_model/metrics/classification_report.txt >> report.md
-          echo "```" >> report.md
+          echo "\`\`\`" >> report.md
+          
+          # Create CML report
           cml comment create report.md

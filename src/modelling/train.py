@@ -1,8 +1,8 @@
 """
-Train the model using Random Forest Classifier
+Train the model using Support Vector Machine Classifier
 """
 
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.svm import SVC
 from src.logging.console_log import setup_logging
 import pandas as pd
 import pickle
@@ -12,20 +12,21 @@ from settings import settings
 logger = setup_logging()
 
 
-def train_model(X_train: pd.DataFrame, y_train: pd.DataFrame) -> RandomForestClassifier:
-    """Train the model using Random Forest
+def train_model(X_train: pd.DataFrame, y_train: pd.DataFrame) -> SVC:
+    """Train the model using SVM
 
     Args:
         X_train (pd.DataFrame): Training features
         y_train (pd.DataFrame): Training target
 
     Returns:
-        RandomForestClassifier: Trained model
+        SVC: Trained model
     """    
-    model = RandomForestClassifier(
-        n_estimators=100,
-        max_depth=10,
-        random_state=settings.RANDOM_STATE
+    model = SVC(
+        kernel='rbf',
+        random_state=settings.RANDOM_STATE,
+        C=1000,
+        gamma=0.1
     )
     logger.info(f"Training the model using {model}")
     model.fit(X_train, y_train[settings.TARGET_COLUMN_NAME])
