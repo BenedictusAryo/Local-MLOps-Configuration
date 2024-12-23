@@ -26,6 +26,7 @@ jobs:
           uv pip install -r pyproject.toml --all-extras
 
       - name: Run Training Pipeline
+        id: pipeline
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -35,18 +36,26 @@ jobs:
           uv run python -m src.modelling.test
 
       - name: Create CML Report
+        needs: pipeline
+        if: always()
         env:
           REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           # Create report header
+          echo "## Debug Information" > report.md
+          echo "Current working directory:" >> report.md
+          echo "\`\`\`" >> report.md
+          pwd >> report.md
+          echo "\`\`\`" >> report.md
+          
           echo "## Model Training Report" > report.md
           echo "This is a report on the model training pipeline" >> report.md
           echo "<br>" >> report.md
           
           # Add metrics JSON
-          echo "```json" >> report.md
+          echo "\`\`\`json" >> report.md
           cat saved_model/metrics/overall_metrics.json >> report.md
-          echo "```" >> report.md
+          echo "\`\`\`" >> report.md
           echo "<br>" >> report.md
           
           # Add confusion matrix
