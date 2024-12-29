@@ -3,12 +3,10 @@ Check for data drift by comparing current data distribution
 with the reference distribution saved during training
 """
 import pandas as pd
-import numpy as np
 from scipy import stats
 from pathlib import Path
 from settings import settings
 from src.logging.console_log import setup_logging
-from typing import Tuple
 
 # setup logging
 logger = setup_logging()

@@ -2,12 +2,14 @@ name: Data Drift Monitoring
 
 on:
   schedule:
-    - cron: '0 0 * * 0'  # Run every Sunday at midnight
+    - cron: '0 0 1 * *'  # Run at midnight on the first day of every month
 
 jobs:
   check-drift:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/setup-node@v2
+      - uses: iterative/setup-cml@v1
       - uses: actions/checkout@v4
       
       - name: Install uv
@@ -24,11 +26,15 @@ jobs:
           uv pip install -r pyproject.toml --all-extras
 
       - name: Check Data Drift
+        id: drift_check
         run: |
+          uv run python -m src.data.collect_data
           uv run python -m src.monitoring.check_drift
+          DRIFT_STATUS=$(cat saved_model/metrics/drift_status.txt)
+          echo "drift_detected=$DRIFT_STATUS" >> "$GITHUB_OUTPUT"
         
       - name: Retrain if Drift Detected
-        if: ${{ env.DRIFT_DETECTED == 'true' }}
+        if: steps.drift_check.outputs.drift_detected == 'true'
         run: |
           uv run python -m src.data.collect_data
           uv run python -m src.data.preprocess_data
@@ -36,7 +42,7 @@ jobs:
           uv run python -m src.modelling.test
 
       - name: Deploy New Model
-        if: ${{ env.DRIFT_DETECTED == 'true' }}
+        if: steps.drift_check.outputs.drift_detected == 'true'
         run: |
           docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/mlops-simple-app:latest .
           docker push ${{ secrets.DOCKERHUB_USERNAME }}/mlops-simple-app:latest
